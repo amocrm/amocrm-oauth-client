@@ -3,7 +3,6 @@
 В данном пакете представлена поддержка протокола OAuth 2.0 в amoCRM для библитеки PHP League [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
 ## Установка
-**пока нельзя, просто склонировать этот проект и сделать в нём composer install, в файле test.php есть примеры**
 
 Установить можно с помощью composer:
 
