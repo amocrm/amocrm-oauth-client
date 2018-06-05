@@ -1,0 +1,32 @@
+{
+    "name": "amocrm/oauth2-amocrm",
+    "description": "amoCRM OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikita Bessudnov",
+            "email": "nbessudnov@team.amocrm.com",
+            "homepage": "https://github.com/bessudnov"
+        }
+    ],
+    "keywords": [
+        "oauth",
+        "oauth2",
+        "client",
+        "authorization",
+        "authorisation",
+        "amocrm"
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "league/oauth2-client": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "AmoCRM\\OAuth2\\Client\\Provider\\": "src/"
+        }
+    }
+}

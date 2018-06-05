@@ -1,0 +1,36 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+env: MINIMUM_VERSIONS=false
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+
+matrix:
+  include:
+    - php: 5.6
+      env: MINIMUM_VERSIONS=true
+    - php: hhvm
+      dist: trusty
+
+install:
+  - if [[ $MINIMUM_VERSIONS = false ]]; then composer install; fi
+  - if [[ $MINIMUM_VERSIONS = true ]]; then composer update --no-interaction --prefer-lowest; fi
+
+script:
+  - composer run test
+  - composer run check
+
+after_script:
+  - |
+    if [ -f "build/logs/clover.xml" ]; then
+      vendor/bin/coveralls -v
+    fi
