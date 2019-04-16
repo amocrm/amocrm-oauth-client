@@ -56,4 +56,5 @@ $token = $provider->getAccessToken($grant, ['refresh_token' => $refreshToken]);
 ```
 <div class="button"></div>
 <script>var AMOCRM_OAUTH = { client_id: "xxxxxx-client-id-xxxxxx", title: "Добавить в amoCRM" };</script>
-<script id="amocrm_oauth" charset="utf-8" src="https://amocrm.ru/auth/button.js"></script>```
+<script id="amocrm_oauth" charset="utf-8" src="https://amocrm.ru/auth/button.js"></script>
+```
