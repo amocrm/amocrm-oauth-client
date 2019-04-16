@@ -50,3 +50,10 @@ $provider = new AmoCRM\OAuth2\Client\Provider\AmoCRM([
 $grant = new \League\OAuth2\Client\Grant\RefreshToken();
 $token = $provider->getAccessToken($grant, ['refresh_token' => $refreshToken]);
 ```
+
+### Кнопка на сайт ###
+Для удобства можно разместить кнопку на сайт для простой установки созданной интеграции.
+```
+<div class="button"></div>
+<script>var AMOCRM_OAUTH = { client_id: "xxxxxx-client-id-xxxxxx", title: "Добавить в amoCRM" };</script>
+<script id="amocrm_oauth" charset="utf-8" src="https://amocrm.ru/auth/button.js"></script>```
