@@ -18,9 +18,9 @@ composer require amocrm/oauth2-amocrm
 
 ```php
 $provider = new AmoCRM([
-    'clientId' => 'xxx',
-    'clientSecret' => 'xxx',
-    'redirectUri' => 'https://test.test',
+    'clientId' => 'YOUR_CLIENT_ID',
+    'clientSecret' => 'YOUR_CLIENT_SECRET',
+    'redirectUri' => 'http://your-redirect-uri',
 ]);
 
 if (isset($_GET['code']) && $_GET['code']) {
@@ -46,9 +46,9 @@ if (isset($_GET['code']) && $_GET['code']) {
 
 ```php
 $provider = new AmoCRM([
-    'clientId' => 'xxx',
-    'clientSecret' => 'xxx',
-    'redirectUri' => 'https://test.test',
+    'clientId' => 'YOUR_CLIENT_ID',
+    'clientSecret' => 'YOUR_CLIENT_SECRET',
+    'redirectUri' => 'http://your-redirect-uri',
 ]);
 
 //todo получение токена из хранилища
@@ -74,6 +74,14 @@ if (time() >= $token['expires']) {
 }
 
 //todo повторяем исходный запрос
+```
+
+### Кнопка на сайт ###
+Для удобства можно разместить кнопку на сайт для простой установки созданной интеграции.
+```
+<div class="button"></div>
+<script>var AMOCRM_OAUTH = { client_id: "xxxxxx-client-id-xxxxxx", title: "Добавить в amoCRM" };</script>
+<script id="amocrm_oauth" charset="utf-8" src="https://amocrm.ru/auth/button.js"></script>
 ```
 
 ### Пример
