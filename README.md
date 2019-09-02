@@ -17,12 +17,10 @@ composer require amocrm/oauth2-amocrm
 ### Обработка кода авторизации (Authorization Code)
 
 ```php
-$provider = new AmoCRM\OAuth2\Client\Provider\AmoCRM([
-    'clientId' => 'YOUR_CLIENT_ID',
-    'clientSecret' => 'YOUR_CLIENT_SECRET',
-    'redirectUri' => 'http://your-redirect-uri',
-    'clientSubdomain' => 'example',
-    'clientTopLevelDomain' => 'ru', //use com for us accounts
+$provider = new AmoCRM([
+    'clientId' => 'xxx',
+    'clientSecret' => 'xxx',
+    'redirectUri' => 'https://test.test',
 ]);
 
 if (isset($_GET['code']) && $_GET['code']) {
@@ -30,23 +28,56 @@ if (isset($_GET['code']) && $_GET['code']) {
         'code' => $_GET['code']
     ]);
 
-    // Returns an instance of League\OAuth2\Client\User
-    $user = $this->provider->getUserDetails($token);
-    $uid = $provider->getUserUid($token);
-    $email = $provider->getUserEmail($token);
-    $screenName = $provider->getUserScreenName($token);
+    //Вызов функции setBaseDomain требуется для установки контектс аккаунта.
+    if (isset($_GET['referer'])) {
+        $provider->setBaseDomain($_GET['referer']);
+    }
+    
+    //todo сохраняем access, refresh токены и привязку к аккаунту и возможно пользователю
+
+	/** @var \AmoCRM\OAuth2\Client\Provider\AmoCRMResourceOwner $ownerDetails */
+    $ownerDetails = $provider->getResourceOwner($token);
+
+    printf('Hello, %s!', $ownerDetails->getName());
 }
 ```
 
 ### Обновление access токена
 
 ```php
-$provider = new AmoCRM\OAuth2\Client\Provider\AmoCRM([
-    'clientId' => 'YOUR_CLIENT_ID',
-    'clientSecret' => 'YOUR_CLIENT_SECRET',
-    'redirectUri' => 'http://your-redirect-uri',
+$provider = new AmoCRM([
+    'clientId' => 'xxx',
+    'clientSecret' => 'xxx',
+    'redirectUri' => 'https://test.test',
 ]);
 
-$grant = new \League\OAuth2\Client\Grant\RefreshToken();
-$token = $provider->getAccessToken($grant, ['refresh_token' => $refreshToken]);
+//todo получение токена из хранилища
+
+$provider->setBaseDomain($token['baseDomain']);
+/**
+ * Проверяем активен ли токен и делаем запрос или обновляем токен
+ */
+if (time() >= $token['expires']) {
+	/**
+	 * Получаем токен по рефрешу
+	 */
+	try {
+		$accessToken = $provider->getAccessToken(new League\OAuth2\Client\Grant\RefreshToken(), [
+			'refresh_token' => $token['refreshToken'],
+		]);
+
+		//todo сохраняем новые access, refresh токены и привязку к аккаунту и возможно пользователю
+
+	} catch (Exception $e) {
+		die((string)$e);
+	}
+}
+
+//todo повторяем исходный запрос
 ```
+
+### Пример
+В рамках данного репозитория имеется файл **example.php**, который рееализует простейшую логику авторизации, сохранения токена, а также совеершения запросов.
+Для использования нужно указать корректные значения при создании провайдера. Дальше для теста можно переейти на страницу example.php, после чего будет редирект в приложение amoCRM для авторизации.
+После получения доступов вы увидете имя пользователя на экране.
+Если добавить GET параметр - request=1, то будет совершен запрос за информацией об аккаунте с сохраненным ранее токеном.

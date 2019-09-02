@@ -1,26 +1,24 @@
 <?php
 namespace AmoCRM\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Entity\User;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Psr\Http\Message\ResponseInterface;
 
 class AmoCRM extends AbstractProvider
 {
+    use BearerAuthorizationTrait;
+
     /**
      * @var string
      */
-    public $clientSubdomain = 'www';
+    public $baseDomain = 'www.amocrm.ru';
 
     /**
      * @var string
      */
     public $protocol = 'https://';
-
-    /**
-     * @var string
-     */
-    public $clientTopLevelDomain = 'ru';
 
     /**
      * @var array
@@ -47,60 +45,94 @@ class AmoCRM extends AbstractProvider
     {
         parent::__construct($options);
 
-        if (isset($options['clientSubdomain'])) {
-            $this->clientSubdomain = $options['clientSubdomain'];
-        }
-
-        if (isset($options['clientTopLevelDomain'])) {
-            $this->clientTopLevelDomain = $options['clientTopLevelDomain'];
+        if (isset($options['baseDomain'])) {
+            $this->baseDomain = $options['baseDomain'];
         }
     }
 
-	public function urlAccount()
+    /**
+     * @param string $domain
+     */
+    public function setBaseDomain($domain) {
+        $this->baseDomain = $domain;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseDomain() {
+        return $this->baseDomain;
+    }
+
+    /**
+     * Get authorization url to begin OAuth flow
+     *
+     * @return string
+     */
+    public function getBaseAuthorizationUrl()
+    {
+        return $this->protocol . $this->baseDomain . '/oauth/';
+    }
+
+    /**
+     * Get access token url to retrieve token
+     *
+     * @param array $params
+     *
+     * @return string
+     */
+    public function getBaseAccessTokenUrl(array $params)
+    {
+        return $this->protocol . $this->baseDomain . '/oauth2/access_token';
+    }
+
+    /**
+     * Get the default scopes used by this provider.
+     *
+     * @return array
+     */
+    protected function getDefaultScopes()
+    {
+        return [];
+    }
+
+
+    public function urlAccount()
 	{
-		return $this->protocol . $this->clientSubdomain . '.amocrm.' . $this->clientTopLevelDomain . '/';
+		return $this->protocol . $this->baseDomain . '/';
 	}
 
-    public function urlAuthorize()
+    /**
+     * Generate a user object from a successful user details request.
+     *
+     * @param array $response
+     * @param AccessToken $token
+     * @return AmoCRMResourceOwner
+     */
+    protected function createResourceOwner(array $response, AccessToken $token)
     {
-        return $this->protocol . 'www.amocrm.' . $this->clientTopLevelDomain . '/oauth/';
+        return new AmoCRMResourceOwner($response);
     }
 
-    public function urlAccessToken()
+    /**
+     * @inheritDoc
+     */
+    protected function checkResponse(ResponseInterface $response, $data)
     {
-        return $this->protocol . $this->clientSubdomain . '.amocrm.' . $this->clientTopLevelDomain . '/oauth2/access_token';
+        if ($response->getStatusCode() >= 400) {
+            throw AmoCRMException::errorResponse($response, $data);
+        }
     }
 
-    public function urlUserDetails(AccessToken $token)
+    /**
+     * Get provider url to fetch user details
+     *
+     * @param AccessToken $token
+     *
+     * @return string
+     */
+    public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return $this->protocol . $this->clientSubdomain . '.amocrm.' . $this->clientTopLevelDomain . '/v3/user';
+        return $this->urlAccount() . '/v3/user';
     }
-
-    public function userDetails($response, AccessToken $token)
-    {
-        $user = new User();
-
-        $user->exchangeArray([
-            'uid'   => isset($response->id) ? $response->id : null,
-            'name'  => isset($response->name) ? $response->name : null,
-            'email' => isset($response->email) ? $response->email : null,
-        ]);
-
-        return $user;
-    }
-
-
-    public function getAuthorizationUrl($options = [])
-    {
-        $this->state = isset($options['state']) ? $options['state'] : md5(uniqid(rand(), true));
-
-        $params = [
-            'client_id' => $this->clientId,
-            'redirect_uri' => $this->redirectUri,
-            'state' => $this->state,
-        ];
-
-        return $this->urlAuthorize().'?'.$this->httpBuildQuery($params, '', '&');
-    }
-
 }
