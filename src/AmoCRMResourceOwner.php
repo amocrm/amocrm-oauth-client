@@ -1,4 +1,5 @@
 <?php
+
 namespace AmoCRM\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -18,7 +19,7 @@ class AmoCRMResourceOwner implements ResourceOwnerInterface
     /**
      * Creates new resource owner.
      *
-     * @param array  $response
+     * @param array $response
      */
     public function __construct(array $response = [])
     {

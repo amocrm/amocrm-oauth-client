@@ -1,4 +1,5 @@
 <?php
+
 namespace AmoCRM\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -53,14 +54,16 @@ class AmoCRM extends AbstractProvider
     /**
      * @param string $domain
      */
-    public function setBaseDomain($domain) {
+    public function setBaseDomain($domain)
+    {
         $this->baseDomain = $domain;
     }
 
     /**
      * @return string
      */
-    public function getBaseDomain() {
+    public function getBaseDomain()
+    {
         return $this->baseDomain;
     }
 
@@ -98,9 +101,9 @@ class AmoCRM extends AbstractProvider
 
 
     public function urlAccount()
-	{
-		return $this->protocol . $this->baseDomain . '/';
-	}
+    {
+        return $this->protocol . $this->baseDomain . '/';
+    }
 
     /**
      * Generate a user object from a successful user details request.

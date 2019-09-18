@@ -21,26 +21,26 @@ if (isset($_GET['referer'])) {
 }
 
 if (!isset($_GET['request'])) {
-	if (!isset($_GET['code'])) {
-		/**
-		 * Получаем ссылку для авторизации и дальше редиректим
-		 */
-		$authorizationUrl = $provider->getAuthorizationUrl();
-		$_SESSION['oauth2state'] = $provider->getState();
-		header('Location: ' . $authorizationUrl);
-	} elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
-		unset($_SESSION['oauth2state']);
-		exit('Invalid state');
-	}
+    if (!isset($_GET['code'])) {
+        /**
+         * Получаем ссылку для авторизации и дальше редиректим
+         */
+        $authorizationUrl = $provider->getAuthorizationUrl();
+        $_SESSION['oauth2state'] = $provider->getState();
+        header('Location: ' . $authorizationUrl);
+    } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+        unset($_SESSION['oauth2state']);
+        exit('Invalid state');
+    }
 
-	/**
-	 * Ловим обратный код
-	 */
-	try {
-		/** @var \League\OAuth2\Client\Token\AccessToken $access_token */
-		$accessToken = $provider->getAccessToken(new League\OAuth2\Client\Grant\AuthorizationCode(), [
-			'code' => $_GET['code'],
-		]);
+    /**
+     * Ловим обратный код
+     */
+    try {
+        /** @var \League\OAuth2\Client\Token\AccessToken $access_token */
+        $accessToken = $provider->getAccessToken(new League\OAuth2\Client\Grant\AuthorizationCode(), [
+            'code' => $_GET['code'],
+        ]);
 
         if (!$accessToken->hasExpired()) {
             saveToken([
@@ -50,46 +50,46 @@ if (!isset($_GET['request'])) {
                 'baseDomain' => $provider->getBaseDomain(),
             ]);
         }
-	} catch (Exception $e) {
-		die((string)$e);
-	}
+    } catch (Exception $e) {
+        die((string)$e);
+    }
 
-	/** @var \AmoCRM\OAuth2\Client\Provider\AmoCRMResourceOwner $ownerDetails */
+    /** @var \AmoCRM\OAuth2\Client\Provider\AmoCRMResourceOwner $ownerDetails */
     $ownerDetails = $provider->getResourceOwner($accessToken);
 
     printf('Hello, %s!', $ownerDetails->getName());
 } else {
-	$accessToken = getToken();
+    $accessToken = getToken();
 
-	$provider->setBaseDomain($accessToken->getValues()['baseDomain']);
+    $provider->setBaseDomain($accessToken->getValues()['baseDomain']);
 
-	/**
-	 * Проверяем активен ли токен и делаем запрос или обновляем токен
-	 */
-	if ($accessToken->hasExpired()) {
-		/**
-		 * Получаем токен по рефрешу
-		 */
-		try {
-			$accessToken = $provider->getAccessToken(new League\OAuth2\Client\Grant\RefreshToken(), [
-				'refresh_token' => $accessToken->getRefreshToken(),
-			]);
+    /**
+     * Проверяем активен ли токен и делаем запрос или обновляем токен
+     */
+    if ($accessToken->hasExpired()) {
+        /**
+         * Получаем токен по рефрешу
+         */
+        try {
+            $accessToken = $provider->getAccessToken(new League\OAuth2\Client\Grant\RefreshToken(), [
+                'refresh_token' => $accessToken->getRefreshToken(),
+            ]);
 
-			saveToken([
+            saveToken([
                 'accessToken' => $accessToken->getToken(),
                 'refreshToken' => $accessToken->getRefreshToken(),
                 'expires' => $accessToken->getExpires(),
                 'baseDomain' => $provider->getBaseDomain(),
             ]);
 
-		} catch (Exception $e) {
-			die((string)$e);
-		}
-	}
+        } catch (Exception $e) {
+            die((string)$e);
+        }
+    }
 
-	$token = $accessToken->getToken();
+    $token = $accessToken->getToken();
 
-	try {
+    try {
         /**
          * Делаем запрос к АПИ
          */
@@ -100,38 +100,40 @@ if (!isset($_GET['request'])) {
 
         $parsedBody = json_decode($data->getBody()->getContents(), true);
         printf('ID аккаунта - %s, название - %s', $parsedBody['id'], $parsedBody['name']);
-	} catch (GuzzleHttp\Exception\GuzzleException $e) {
-		var_dump((string)$e);
-	}
+    } catch (GuzzleHttp\Exception\GuzzleException $e) {
+        var_dump((string)$e);
+    }
 }
 
 
-function saveToken($accessToken) {
-	if (
-	    isset($accessToken)
+function saveToken($accessToken)
+{
+    if (
+        isset($accessToken)
         && isset($accessToken['accessToken'])
         && isset($accessToken['refreshToken'])
         && isset($accessToken['expires'])
         && isset($accessToken['baseDomain'])
-	) {
-		$data = [
-			'accessToken' => $accessToken['accessToken'],
-			'expires' => $accessToken['expires'],
-			'refreshToken' => $accessToken['refreshToken'],
+    ) {
+        $data = [
+            'accessToken' => $accessToken['accessToken'],
+            'expires' => $accessToken['expires'],
+            'refreshToken' => $accessToken['refreshToken'],
             'baseDomain' => $accessToken['baseDomain'],
-		];
+        ];
 
-		file_put_contents(TOKEN_FILE, json_encode($data));
-	} else {
-		exit('Invalid access token ' . var_export($accessToken, true));
-	}
+        file_put_contents(TOKEN_FILE, json_encode($data));
+    } else {
+        exit('Invalid access token ' . var_export($accessToken, true));
+    }
 }
 
 /**
  * @return \League\OAuth2\Client\Token\AccessToken
  */
-function getToken() {
-	$accessToken = json_decode(file_get_contents(TOKEN_FILE), true);
+function getToken()
+{
+    $accessToken = json_decode(file_get_contents(TOKEN_FILE), true);
 
     if (
         isset($accessToken)
@@ -146,7 +148,7 @@ function getToken() {
             'expires' => $accessToken['expires'],
             'baseDomain' => $accessToken['baseDomain'],
         ]);
-	} else {
-		exit('Invalid access token ' . var_export($accessToken, true));
-	}
+    } else {
+        exit('Invalid access token ' . var_export($accessToken, true));
+    }
 }
