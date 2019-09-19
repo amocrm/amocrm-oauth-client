@@ -1,5 +1,5 @@
 <?php
-define('TOKEN_FILE', __DIR__ . DIRECTORY_SEPARATOR . 'token_info.json');
+define('TOKEN_FILE', DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'token_info.json');
 
 use AmoCRM\OAuth2\Client\Provider\AmoCRM;
 
@@ -13,7 +13,7 @@ session_start();
 $provider = new AmoCRM([
     'clientId' => 'xxx',
     'clientSecret' => 'xxx',
-    'redirectUri' => 'https://ya.ru',
+    'redirectUri' => 'https://example.test',
 ]);
 
 if (isset($_GET['referer'])) {
@@ -23,11 +23,28 @@ if (isset($_GET['referer'])) {
 if (!isset($_GET['request'])) {
     if (!isset($_GET['code'])) {
         /**
-         * Получаем ссылку для авторизации и дальше редиректим
+         * Просто отображаем кнопку авторизации или получаем ссылку для авторизации
+         * По-умолчанию - отображаем кнопку
          */
-        $authorizationUrl = $provider->getAuthorizationUrl();
         $_SESSION['oauth2state'] = $provider->getState();
-        header('Location: ' . $authorizationUrl);
+        if (true) {
+            echo '<div>
+                <script
+                    id="amocrm_oauth"
+                    charset="utf-8"
+                    data-client-id="b9bde73d-927e-4f7c-994c-75236076437e"
+                    data-title="Установить интеграцию"
+                    data-compact="false"
+                    data-class-name="className"
+                    data-color="default"
+                    data-state="' . $_SESSION['oauth2state'] . '"
+                    src="https://www.amocrm.ru/auth/button.min.js"
+                ></script>
+                </div>';
+        } else {
+            $authorizationUrl = $provider->getAuthorizationUrl();
+            header('Location: ' . $authorizationUrl);
+        }
     } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
         unset($_SESSION['oauth2state']);
         exit('Invalid state');
