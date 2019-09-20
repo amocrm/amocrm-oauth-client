@@ -68,6 +68,14 @@ class AmoCRM extends AbstractProvider
     }
 
     /**
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
      * Get authorization url to begin OAuth flow
      *
      * @return string

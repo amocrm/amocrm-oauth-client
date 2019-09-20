@@ -32,7 +32,7 @@ if (!isset($_GET['request'])) {
                 <script
                     class="amocrm_oauth"
                     charset="utf-8"
-                    data-client-id="b9bde73d-927e-4f7c-994c-75236076437e"
+                    data-client-id="' . $provider->getClientId() . '"
                     data-title="Установить интеграцию"
                     data-compact="false"
                     data-class-name="className"
@@ -41,11 +41,12 @@ if (!isset($_GET['request'])) {
                     src="https://www.amocrm.ru/auth/button.min.js"
                 ></script>
                 </div>';
+            die;
         } else {
             $authorizationUrl = $provider->getAuthorizationUrl();
             header('Location: ' . $authorizationUrl);
         }
-    } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+    } elseif (empty($_GET['state']) || empty($_SESSION['oauth2state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
         unset($_SESSION['oauth2state']);
         exit('Invalid state');
     }
