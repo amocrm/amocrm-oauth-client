@@ -30,7 +30,7 @@ if (!isset($_GET['request'])) {
         if (true) {
             echo '<div>
                 <script
-                    id="amocrm_oauth"
+                    class="amocrm_oauth"
                     charset="utf-8"
                     data-client-id="b9bde73d-927e-4f7c-994c-75236076437e"
                     data-title="Установить интеграцию"
