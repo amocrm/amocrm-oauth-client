@@ -38,9 +38,15 @@ if (!isset($_GET['request'])) {
                     data-class-name="className"
                     data-color="default"
                     data-state="' . $_SESSION['oauth2state'] . '"
+                    data-error-callback="handleOauthError"
                     src="https://www.amocrm.ru/auth/button.min.js"
                 ></script>
                 </div>';
+            echo '<script>
+            handleOauthError = function(event) {
+                alert(\'ID клиента - \' + event.client_id + \' Ошибка - \' + event.error);
+            }
+            </script>';
             die;
         } else {
             $authorizationUrl = $provider->getAuthorizationUrl();
