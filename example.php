@@ -26,7 +26,7 @@ if (!isset($_GET['request'])) {
          * Просто отображаем кнопку авторизации или получаем ссылку для авторизации
          * По-умолчанию - отображаем кнопку
          */
-        $_SESSION['oauth2state'] = $provider->getState();
+        $_SESSION['oauth2state'] = bin2hex(random_bytes(16));
         if (true) {
             echo '<div>
                 <script
@@ -49,7 +49,7 @@ if (!isset($_GET['request'])) {
             </script>';
             die;
         } else {
-            $authorizationUrl = $provider->getAuthorizationUrl();
+            $authorizationUrl = $provider->getAuthorizationUrl(['state' => $_SESSION['oauth2state']]);
             header('Location: ' . $authorizationUrl);
         }
     } elseif (empty($_GET['state']) || empty($_SESSION['oauth2state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
