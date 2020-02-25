@@ -24,7 +24,7 @@ $provider = new AmoCRM([
 ]);
 
 if (isset($_GET['code']) && $_GET['code']) {
-    $token = $this->provider->getAccessToken('authorizaton_code', [
+    $token = $this->provider->getAccessToken('authorization_code', [
         'code' => $_GET['code']
     ]);
 
