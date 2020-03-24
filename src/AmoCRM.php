@@ -35,16 +35,17 @@ class AmoCRM extends AbstractProvider
      * @var array
      */
     public $headers = [
-        'User-Agent' => 'amoCRM/oAuth Client 1.0'
+        'User-Agent' => 'amoCRM/oAuth Client 1.0',
     ];
 
     /**
      * AmoCRM constructor.
      * @param array $options
+     * @param array $collaborators
      */
-    public function __construct($options = [])
+    public function __construct($options = [], $collaborators = [])
     {
-        parent::__construct($options);
+        parent::__construct($options, $collaborators);
 
         if (isset($options['baseDomain'])) {
             $this->baseDomain = $options['baseDomain'];
