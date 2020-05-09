@@ -83,7 +83,7 @@ class AmoCRM extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        return $this->protocol . $this->baseDomain . '/oauth/';
+        return $this->urlAccount() . 'oauth/';
     }
 
     /**
@@ -95,7 +95,7 @@ class AmoCRM extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return $this->protocol . $this->baseDomain . '/oauth2/access_token';
+        return $this->urlAccount() . 'oauth2/access_token';
     }
 
     /**
@@ -145,6 +145,6 @@ class AmoCRM extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return $this->urlAccount() . '/v3/user';
+        return $this->urlAccount() . 'v3/user';
     }
 }
