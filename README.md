@@ -24,14 +24,14 @@ $provider = new AmoCRM([
 ]);
 
 if (isset($_GET['code']) && $_GET['code']) {
-    $token = $this->provider->getAccessToken('authorization_code', [
-        'code' => $_GET['code']
-    ]);
-
     //Вызов функции setBaseDomain требуется для установки контектс аккаунта.
     if (isset($_GET['referer'])) {
         $provider->setBaseDomain($_GET['referer']);
     }
+    
+    $token = $this->provider->getAccessToken('authorization_code', [
+        'code' => $_GET['code']
+    ]);    
     
     //todo сохраняем access, refresh токены и привязку к аккаунту и возможно пользователю
 
