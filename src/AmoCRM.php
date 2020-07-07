@@ -11,10 +11,12 @@ class AmoCRM extends AbstractProvider
 {
     use BearerAuthorizationTrait;
 
+    const BASE_DOMAIN = 'www.amocrm.ru';
+
     /**
      * @var string
      */
-    public $baseDomain = 'www.amocrm.ru';
+    public $baseDomain = self::BASE_DOMAIN;
 
     /**
      * @var string
