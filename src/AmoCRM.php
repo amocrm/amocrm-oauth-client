@@ -81,6 +81,14 @@ class AmoCRM extends AbstractProvider
     }
 
     /**
+     * @param string|null $redirectUri
+     */
+    public function setRedirectUri($redirectUri)
+    {
+        $this->redirectUri = $redirectUri;
+    }
+
+    /**
      * @return string
      */
     public function getProtocol()
