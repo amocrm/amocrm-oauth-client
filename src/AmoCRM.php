@@ -69,6 +69,26 @@ class AmoCRM extends AbstractProvider
     }
 
     /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        if (!in_array($protocol, ['https://', 'http://'], true)) {
+            return;
+        }
+
+        $this->protocol = $protocol;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
      * @return string
      */
     public function getClientId()
@@ -111,7 +131,7 @@ class AmoCRM extends AbstractProvider
 
     public function urlAccount()
     {
-        return $this->protocol . $this->baseDomain . '/';
+        return $this->getProtocol() . $this->getBaseDomain() . '/';
     }
 
     /**
