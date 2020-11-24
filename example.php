@@ -1,4 +1,5 @@
 <?php
+
 define('TOKEN_FILE', DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'token_info.json');
 
 use AmoCRM\OAuth2\Client\Provider\AmoCRM;
