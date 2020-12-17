@@ -29,13 +29,13 @@ if (isset($_GET['code']) && $_GET['code']) {
         $provider->setBaseDomain($_GET['referer']);
     }
     
-    $token = $this->provider->getAccessToken('authorization_code', [
+    $token = $provider->getAccessToken('authorization_code', [
         'code' => $_GET['code']
     ]);    
     
     //todo сохраняем access, refresh токены и привязку к аккаунту и возможно пользователю
 
-	/** @var \AmoCRM\OAuth2\Client\Provider\AmoCRMResourceOwner $ownerDetails */
+    /** @var \AmoCRM\OAuth2\Client\Provider\AmoCRMResourceOwner $ownerDetails */
     $ownerDetails = $provider->getResourceOwner($token);
 
     printf('Hello, %s!', $ownerDetails->getName());
