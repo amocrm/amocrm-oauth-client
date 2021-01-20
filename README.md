@@ -81,7 +81,7 @@ if (time() >= $token['expires']) {
 ```
 <div class="button"></div>
 <script 
-    id="amocrm_oauth"
+    class="amocrm_oauth"
     charset="utf-8"
     data-client-id="xxxxxx-client-id-xxxxxx"
     data-title="Добавить в amoCRM"
