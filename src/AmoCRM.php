@@ -35,7 +35,7 @@ class AmoCRM extends AbstractProvider
      * @var array
      */
     public $headers = [
-        'User-Agent' => 'amoCRM/oAuth Client 1.0',
+        'User-Agent' => 'amoCRM/oAuth Client 1.1',
     ];
 
     /**
@@ -45,7 +45,9 @@ class AmoCRM extends AbstractProvider
      */
     public function __construct($options = [], $collaborators = [])
     {
+        $collaborators['optionProvider'] = new PostAuthOptionProvider();
         parent::__construct($options, $collaborators);
+
 
         if (isset($options['baseDomain'])) {
             $this->baseDomain = $options['baseDomain'];
