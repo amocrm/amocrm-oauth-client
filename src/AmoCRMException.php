@@ -23,7 +23,11 @@ class AmoCRMException extends IdentityProviderException
             $message .= " ({$data['hint']})";
         }
 
-        $code = $response->getStatusCode();
+        $code = 0;
+        if (isset($data['error_code'])) {
+            $code = $data['error_code'];
+        }
+
         $body = (string)$response->getBody();
         return new static($message, $code, $body);
     }
